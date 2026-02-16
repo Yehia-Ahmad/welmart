@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Product Details - Walmart-Inspired Store</title>
+  <title>Product Details - SAFQQA-Inspired Store</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
@@ -23,7 +23,7 @@
 
         <form class="safqa-search" role="search" aria-label="Site search" autocomplete="off">
           <button class="safqa-search-icon" type="submit"><i class="bi bi-search"></i></button>
-          <input type="search" placeholder="Search everything at Walmart online and in store">
+          <input type="search" placeholder="Search everything at SAFQQA online and in store">
         </form>
 
         <div class="safqa-actions">
@@ -86,12 +86,25 @@
               <p class="small text-muted mb-0">Pickup, delivery, and shipping available.</p>
             </div>
 
+            <div class="product-condition-line mb-3">
+              <span class="product-condition-label">Condition</span>
+              <span class="product-condition-value" id="productCondition">New</span>
+            </div>
+
+            <div class="alert alert-success py-2 px-3 mb-3 d-none" id="productFreeDeliveryAlert">
+              <i class="bi bi-truck"></i> Free delivery unlocked on this item.
+            </div>
+
+            <div class="alert alert-warning py-2 px-3 mb-3 d-none" id="productCashRuleAlert">
+              <i class="bi bi-exclamation-triangle"></i> For products above $10,000, payment is available by Visa only.
+            </div>
+
             <div class="delivery-box">
               <div class="d-flex gap-2">
                 <div class="delivery-icon"><i class="bi bi-truck"></i></div>
                 <div>
                   <div class="fw-semibold">Arrives by tomorrow</div>
-                  <div class="small text-muted">Free delivery with Walmart+</div>
+                  <div class="small text-muted" id="deliveryPolicyText">Free delivery with SAFQQA+</div>
                 </div>
               </div>
               <div class="d-flex gap-2">
@@ -132,7 +145,7 @@
           <aside class="buy-box card-soft">
             <div class="buy-box-header">
               <h2 class="h6 mb-1">At a glance</h2>
-              <p class="small text-muted mb-0">Sponsored, sold & shipped by Walmart</p>
+              <p class="small text-muted mb-0">Sponsored, sold & shipped by SAFQQA</p>
             </div>
             <div class="buy-box-body">
               <div class="price-block">
@@ -149,10 +162,11 @@
               </div>
 
               <button class="btn btn-primary w-100 add-cart" data-product-id="1">Add to cart</button>
-              <button class="btn btn-outline-primary w-100">Buy now</button>
+              <button class="btn btn-outline-primary w-100" id="buyNowBtn">Buy now</button>
+              <p class="small text-danger mb-0 d-none" id="buyBoxCashNotice">For this item, payment is available by Visa only.</p>
 
               <div class="buy-box-meta">
-                <div><i class="bi bi-shop"></i> Sold by Walmart.com</div>
+                <div><i class="bi bi-shop"></i> Sold by SAFQQA.com</div>
                 <div><i class="bi bi-arrow-return-left"></i> Free return shipping</div>
                 <div><i class="bi bi-award"></i> 2-year protection plan available</div>
               </div>
@@ -183,6 +197,7 @@
           <div class="spec-grid">
             <div><span>Brand</span><b id="productBrand">Proactiv</b></div>
             <div><span>Category</span><b id="productCategorySpec">Skincare</b></div>
+            <div><span>Condition</span><b id="productConditionSpec">New</b></div>
             <div><span>Model</span><b>PKT-2026</b></div>
             <div><span>Return policy</span><b>Free 90-day returns</b></div>
             <div><span>Bundle includes</span><b>3 items + travel kit</b></div>
@@ -293,32 +308,90 @@
   <script src="script.js"></script>
   <script src="pages.js"></script>
   <script>
-    (function () {
-      var params = new URLSearchParams(window.location.search);
-      var id = Number(params.get("id")) || 1;
-      var list = window.WM_PRODUCTS || [];
-      var product = list.find(function (p) { return p.id === id; }) || list[0];
-      if (!product) return;
+    $(function () {
+      function resolveCondition(p) {
+        var valid = ["New", "Package opened", "Used"];
+        if (p && typeof p.condition === "string") {
+          var normalized = p.condition.trim().toLowerCase();
+          if (normalized === "new") return "New";
+          if (normalized === "package opened") return "Package opened";
+          if (normalized === "used") return "Used";
+        }
+        var safeId = Number(p && p.id) || 1;
+        return valid[(safeId - 1) % valid.length];
+      }
 
-      var price = "$" + Number(product.price).toFixed(2);
-      var oldPrice = product.oldPrice ? "$" + Number(product.oldPrice).toFixed(2) : "";
+      function renderProductDetails(product) {
+        if (!product) return;
 
-      document.getElementById("productName").textContent = product.name;
-      document.getElementById("productCategory").textContent = product.category + " / " + product.brand;
-      document.getElementById("productCategorySpec").textContent = product.category;
-      document.getElementById("productBrand").textContent = product.brand;
-      document.getElementById("productRating").textContent = product.rating.toFixed(1);
-      document.getElementById("productImage").src = product.image;
-      document.getElementById("productImage").alt = product.name;
-      document.getElementById("productPrice").textContent = price;
-      document.getElementById("buyBoxPrice").textContent = price;
-      document.getElementById("productOldPrice").textContent = oldPrice || "$" + (Number(product.price) + 10).toFixed(2);
-      document.getElementById("productBreadcrumb").textContent = product.name;
+        var price = "$" + Number(product.price).toFixed(2);
+        var oldPrice = product.oldPrice ? "$" + Number(product.oldPrice).toFixed(2) : "";
+        var condition = resolveCondition(product);
+        var freeDeliveryUnlocked = Number(product.price) >= 1000;
+        var cashOnDeliveryRestricted = Number(product.price) > 10000;
 
-      document.querySelectorAll(".add-cart").forEach(function (btn) {
-        btn.setAttribute("data-product-id", product.id);
-      });
-    })();
+        document.getElementById("productName").textContent = product.name;
+        document.getElementById("productCategory").textContent = product.category + " / " + product.brand;
+        document.getElementById("productCategorySpec").textContent = product.category;
+        document.getElementById("productBrand").textContent = product.brand;
+        document.getElementById("productCondition").textContent = condition;
+        document.getElementById("productConditionSpec").textContent = condition;
+        document.getElementById("productRating").textContent = product.rating.toFixed(1);
+        document.getElementById("productImage").src = product.image;
+        document.getElementById("productImage").alt = product.name;
+        document.getElementById("productPrice").textContent = price;
+        document.getElementById("buyBoxPrice").textContent = price;
+        document.getElementById("productOldPrice").textContent = oldPrice || "$" + (Number(product.price) + 10).toFixed(2);
+        document.getElementById("productBreadcrumb").textContent = product.name;
+
+        var freeDeliveryAlert = document.getElementById("productFreeDeliveryAlert");
+        var cashRuleAlert = document.getElementById("productCashRuleAlert");
+        var deliveryPolicyText = document.getElementById("deliveryPolicyText");
+        var buyBoxCashNotice = document.getElementById("buyBoxCashNotice");
+        var buyNowBtn = document.getElementById("buyNowBtn");
+
+        if (freeDeliveryAlert) {
+          freeDeliveryAlert.classList.toggle("d-none", !freeDeliveryUnlocked);
+        }
+        if (deliveryPolicyText && freeDeliveryUnlocked) {
+          deliveryPolicyText.textContent = "Free delivery included for this item.";
+        }
+
+        if (cashRuleAlert) {
+          cashRuleAlert.classList.toggle("d-none", !cashOnDeliveryRestricted);
+        }
+        if (buyBoxCashNotice) {
+          buyBoxCashNotice.classList.toggle("d-none", !cashOnDeliveryRestricted);
+        }
+        if (buyNowBtn && cashOnDeliveryRestricted) {
+          buyNowBtn.setAttribute("title", "For this item, payment is available by Visa only.");
+        }
+
+        document.querySelectorAll(".add-cart").forEach(function (btn) {
+          btn.setAttribute("data-product-id", product.id);
+        });
+      }
+
+      function selectProductFromUrl() {
+        var params = new URLSearchParams(window.location.search);
+        var id = Number(params.get("id")) || 1;
+        var list = window.WM_PRODUCTS || [];
+        var product = list.find(function (p) { return p.id === id; }) || list[0];
+        renderProductDetails(product);
+      }
+
+      // WM_PRODUCTS is set inside script.js on document ready; retry briefly if needed.
+      var attempts = 0;
+      (function waitForProducts() {
+        if (Array.isArray(window.WM_PRODUCTS) && window.WM_PRODUCTS.length) {
+          selectProductFromUrl();
+          return;
+        }
+        attempts += 1;
+        if (attempts > 20) return;
+        setTimeout(waitForProducts, 25);
+      })();
+    });
   </script>
 </body>
 </html>

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Checkout - Walmart-Inspired Store</title>
+  <title>Checkout - SAFQQA-Inspired Store</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
@@ -22,7 +22,7 @@
 
         <form class="safqa-search" role="search" aria-label="Site search" autocomplete="off">
           <button class="safqa-search-icon" type="submit"><i class="bi bi-search"></i></button>
-          <input type="search" placeholder="Search everything at Walmart online and in store">
+          <input type="search" placeholder="Search everything at SAFQQA online and in store">
         </form>
 
         <div class="safqa-actions">
@@ -50,7 +50,7 @@
             <div class="col-md-4"><label class="form-label">City</label><input class="form-control" name="city" required></div>
             <div class="col-md-4"><label class="form-label">State</label><input class="form-control" name="state" required></div>
             <div class="col-md-4"><label class="form-label">ZIP</label><input class="form-control" name="zip" required></div>
-            <div class="col-12"><label class="form-label">Payment method</label><select class="form-select" name="payment" required><option value="">Select method</option><option>Credit Card</option><option>Debit Card</option><option>Cash on Delivery</option><option>Wallet</option></select></div>
+            <div class="col-12"><label class="form-label">Payment method</label><select class="form-select" name="payment" required><option value="">Select method</option><option>Visa</option><option>Credit Card</option><option>Debit Card</option><option>Cash on Delivery</option><option>Wallet</option></select></div>
             <div class="col-12 d-grid"><button class="btn btn-primary" type="submit">Place order</button></div>
             <div class="col-12"><p id="checkoutStandaloneMessage" class="small mb-0"></p></div>
           </form>
@@ -62,6 +62,12 @@
             <div class="d-flex justify-content-between small mb-1"><span>Subtotal</span><b id="checkoutSubtotal">$0.00</b></div>
             <div class="d-flex justify-content-between small mb-1"><span>Discount</span><b id="checkoutDiscount">$0.00</b></div>
             <div class="d-flex justify-content-between small"><span>Total</span><b id="checkoutTotal">$0.00</b></div>
+            <div class="alert alert-success py-2 px-3 mt-3 mb-2 d-none" id="checkoutFreeDeliveryRule">
+              <i class="bi bi-truck"></i> <span class="checkout-rule-text">You are getting FREE shipping!</span>
+            </div>
+            <div class="alert alert-warning py-2 px-3 mb-0 d-none" id="checkoutVisaOnlyRule">
+              <i class="bi bi-exclamation-triangle"></i> <span class="checkout-rule-text">For products above $10,000, payment is available by Visa only.</span>
+            </div>
           </div>
         </div>
       </div>

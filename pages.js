@@ -32,8 +32,23 @@ $(function () {
     13: { name: "Cordless Hand Blender", price: 22 },
     14: { name: "Resistance Band Set", price: 18 },
     15: { name: "STEM Learning Kit", price: 29 },
-    16: { name: "Bluetooth Portable Speaker", price: 39 }
+    16: { name: "Bluetooth Portable Speaker", price: 39 },
+    17: { name: "Ultra HD Monitor 34-inch", price: 1000 },
+    18: { name: "Professional Espresso Machine", price: 2000 },
+    19: { name: "Luxury Massage Chair", price: 10000 },
+    20: { name: "Industrial CNC Machine", price: 20000 }
   };
+
+  if (Array.isArray(window.WM_PRODUCTS) && window.WM_PRODUCTS.length) {
+    window.WM_PRODUCTS.forEach(function (p) {
+      if (!p || !p.id) return;
+      products[p.id] = {
+        name: p.name || (products[p.id] && products[p.id].name) || "Product",
+        price: Number(p.price) || 0,
+        image: p.image || (products[p.id] && products[p.id].image) || ""
+      };
+    });
+  }
 
   function read(key, fallback) {
     try {
@@ -59,6 +74,76 @@ $(function () {
     });
     var discount = coupon === "SAVE10" ? subtotal * 0.1 : 0;
     return { subtotal: subtotal, discount: discount, total: subtotal - discount };
+  }
+
+  function isVisaMethodLabel(text) {
+    var normalized = String(text || "").trim().toLowerCase();
+    return normalized.indexOf("visa") !== -1 ||
+      normalized.indexOf("فيزا") !== -1;
+  }
+
+  function hasVisaOnlyItems(cart) {
+    return Object.keys(cart).some(function (id) {
+      return !!(products[id] && Number(products[id].price) > 10000);
+    });
+  }
+
+  function hasFreeDeliveryItems(cart) {
+    return Object.keys(cart).some(function (id) {
+      return !!(products[id] && Number(products[id].price) >= 1000);
+    });
+  }
+
+  function renderCheckoutPriceRules(cart) {
+    var $freeRule = $("#checkoutFreeDeliveryRule");
+    var $visaRule = $("#checkoutVisaOnlyRule");
+    if (!$freeRule.length && !$visaRule.length) return;
+
+    var freeDelivery = hasFreeDeliveryItems(cart);
+    var visaOnly = hasVisaOnlyItems(cart);
+
+    if ($freeRule.length) {
+      $freeRule.toggleClass("d-none", !freeDelivery);
+      $freeRule.find(".checkout-rule-text").text(t("You are getting FREE shipping!"));
+    }
+
+    if ($visaRule.length) {
+      $visaRule.toggleClass("d-none", !visaOnly);
+      $visaRule.find(".checkout-rule-text").text(t("For products above $10,000, payment is available by Visa only."));
+    }
+  }
+
+  function syncStandaloneCheckoutPaymentRestrictions() {
+    var $payment = $('#checkoutStandaloneForm select[name="payment"]');
+    if (!$payment.length) return;
+
+    var cart = read(keys.cart, {});
+    var restricted = hasVisaOnlyItems(cart);
+    var $options = $payment.find("option");
+    var $visaOption = $options.filter(function () {
+      return isVisaMethodLabel($(this).text()) || isVisaMethodLabel($(this).val());
+    }).first();
+
+    $options.each(function () {
+      var $option = $(this);
+      var isPlaceholder = !$option.val();
+      if (!restricted || isPlaceholder) {
+        $option.prop("disabled", false);
+        return;
+      }
+
+      var isVisa = isVisaMethodLabel($option.text()) || isVisaMethodLabel($option.val());
+      $option.prop("disabled", !isVisa);
+    });
+
+    if (restricted) {
+      var selectedValue = String($payment.val() || "");
+      var selectedText = $payment.find("option:selected").text();
+      var selectedIsVisa = isVisaMethodLabel(selectedValue) || isVisaMethodLabel(selectedText);
+      if (!selectedIsVisa) {
+        $payment.val($visaOption.length ? ($visaOption.val() || $visaOption.text()) : "");
+      }
+    }
   }
 
   function renderWishlistPage() {
@@ -105,7 +190,7 @@ $(function () {
           '    <div class="d-flex justify-content-between gap-2 flex-wrap">',
           '      <div>',
           '        <div class="fw-semibold">' + p.name + '</div>',
-          '        <div class="small text-muted">' + t("Sold & shipped by Walmart") + '</div>',
+          '        <div class="small text-muted">' + t("Sold & shipped by SAFQQA") + '</div>',
           '      </div>',
           '      <div class="text-end">',
           '        <div class="fw-semibold">' + money(p.price) + '</div>',
@@ -159,6 +244,8 @@ $(function () {
     $("#checkoutSubtotal").text(money(s.subtotal));
     $("#checkoutDiscount").text("-" + money(s.discount));
     $("#checkoutTotal").text(money(s.total));
+    renderCheckoutPriceRules(cart);
+    syncStandaloneCheckoutPaymentRestrictions();
   }
 
   function renderOrdersPage() {
@@ -199,8 +286,18 @@ $(function () {
       var cart = read(keys.cart, {});
       var coupon = localStorage.getItem(keys.coupon) || "";
       var s = summary(cart, coupon);
+      syncStandaloneCheckoutPaymentRestrictions();
+
       if (!Object.keys(cart).length) {
         $("#checkoutStandaloneMessage").text(t("Cart is empty.")).addClass("text-danger");
+        return;
+      }
+
+      var $payment = $(this).find('select[name="payment"]');
+      var selectedPayment = String($payment.val() || "");
+      var selectedText = $payment.find("option:selected").text();
+      if (hasVisaOnlyItems(cart) && !(isVisaMethodLabel(selectedPayment) || isVisaMethodLabel(selectedText))) {
+        $("#checkoutStandaloneMessage").text(t("For products above $10,000, payment is available by Visa only. Please select Visa to continue.")).addClass("text-danger");
         return;
       }
 

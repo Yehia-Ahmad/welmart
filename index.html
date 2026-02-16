@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Walmart-Inspired Smart Storefront</title>
-  <meta name="description" content="Professional Walmart-inspired smart e-commerce homepage built with HTML, CSS, JavaScript, jQuery, and Bootstrap.">
+  <title>SAFQQA-Inspired Smart Storefront</title>
+  <meta name="description" content="Professional SAFQQA-inspired smart e-commerce homepage built with HTML, CSS, JavaScript, jQuery, and Bootstrap.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
@@ -24,7 +24,7 @@
 
         <form class="safqa-search" role="search" aria-label="Site search" autocomplete="off">
           <button class="safqa-search-icon" type="submit"><i class="bi bi-search"></i></button>
-          <input type="search" placeholder="Search everything at Walmart online and in store">
+          <input type="search" placeholder="Search everything at SAFQQA online and in store">
         </form>
 
         <div class="safqa-actions">
@@ -55,65 +55,86 @@
   <main id="main">
     <section class="hero py-4 py-lg-5">
       <div class="container">
-        <div class="row g-4 align-items-stretch">
-          <div class="col-lg-12 reveal">
-            <div id="heroCarousel" class="carousel slide h-100" data-bs-ride="carousel" data-bs-interval="5500">
-              <div class="carousel-indicators">
-                <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="0" class="active" aria-label="Slide 1"></button>
-                <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
-                <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+        <div class="hero-mega reveal" id="heroMegaMenu">
+          <aside class="hero-category-menu" aria-label="Browse product categories">
+            <a class="hero-category-link" href="shop.html?category=fashion" data-hero-category="fashion"><i class="bi bi-bag"></i><span>Fashion</span></a>
+            <a class="hero-category-link" href="shop.html?category=phones" data-hero-category="phones"><i class="bi bi-phone"></i><span>Phones &amp; Tablets</span></a>
+            <a class="hero-category-link" href="shop.html?category=health" data-hero-category="health"><i class="bi bi-heart-pulse"></i><span>Health &amp; Beauty</span></a>
+            <a class="hero-category-link" href="shop.html?category=home" data-hero-category="home"><i class="bi bi-house"></i><span>Home &amp; Furniture</span></a>
+            <a class="hero-category-link" href="shop.html?category=appliances" data-hero-category="appliances"><i class="bi bi-grid"></i><span>Appliances</span></a>
+            <a class="hero-category-link" href="shop.html?category=tv-audio" data-hero-category="tv-audio"><i class="bi bi-tv"></i><span>Televisions &amp; Audio</span></a>
+            <a class="hero-category-link" href="shop.html?category=baby" data-hero-category="baby"><i class="bi bi-emoji-smile"></i><span>Baby Products</span></a>
+            <a class="hero-category-link" href="shop.html?category=supermarket" data-hero-category="supermarket"><i class="bi bi-basket"></i><span>Supermarket</span></a>
+            <a class="hero-category-link" href="shop.html?category=computing" data-hero-category="computing"><i class="bi bi-laptop"></i><span>Computing</span></a>
+            <a class="hero-category-link" href="shop.html?category=sports" data-hero-category="sports"><i class="bi bi-dribbble"></i><span>Sporting Goods</span></a>
+            <a class="hero-category-link" href="shop.html?category=gaming" data-hero-category="gaming"><i class="bi bi-controller"></i><span>Gaming</span></a>
+            <a class="hero-category-link" href="shop.html?category=other" data-hero-category="other"><i class="bi bi-three-dots"></i><span>Other categories</span></a>
+          </aside>
+
+          <div class="hero-display">
+            <div class="hero-slider-area">
+              <div id="heroCarousel" class="carousel slide h-100" data-bs-ride="carousel" data-bs-interval="5500">
+                <div class="carousel-indicators">
+                  <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="0" class="active" aria-label="Slide 1"></button>
+                  <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                  <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                </div>
+
+                <div class="carousel-inner hero-carousel-inner h-100">
+                  <div class="carousel-item active h-100">
+                    <article class="hero-card h-100 d-flex align-items-center">
+                      <div>
+                        <span class="badge text-bg-warning mb-3">Limited-Time Savings</span>
+                        <h1 class="display-5 fw-bold">Everyday essentials, now at lower prices</h1>
+                        <p class="mb-4">Save across groceries, cleaning supplies, and wellness products with convenient pickup or delivery.</p>
+                        <div class="d-flex gap-2 flex-wrap">
+                          <a href="#" class="btn btn-light rounded-pill px-4">Shop essentials</a>
+                          <a href="#" class="btn btn-outline-light rounded-pill px-4">View weekly ad</a>
+                        </div>
+                      </div>
+                    </article>
+                  </div>
+
+                  <div class="carousel-item h-100">
+                    <article class="hero-card alt h-100 d-flex align-items-center">
+                      <div>
+                        <span class="badge text-bg-light mb-3">Tech Refresh</span>
+                        <h2 class="display-6 fw-bold">Top-rated laptops, TVs, and audio picks</h2>
+                        <p class="mb-4">Discover online-only markdowns and free 2-day shipping on select electronics.</p>
+                        <div class="d-flex gap-2 flex-wrap">
+                          <a href="#" class="btn btn-warning rounded-pill px-4">Browse electronics</a>
+                          <a href="#" class="btn btn-outline-light rounded-pill px-4">See best sellers</a>
+                        </div>
+                      </div>
+                    </article>
+                  </div>
+
+                  <div class="carousel-item h-100">
+                    <article class="hero-card third h-100 d-flex align-items-center">
+                      <div>
+                        <span class="badge text-bg-warning mb-3">Home Upgrade</span>
+                        <h2 class="display-6 fw-bold">Refresh every room with smart picks</h2>
+                        <p class="mb-4">Furniture, kitchen, storage, and decor bundles curated for modern homes.</p>
+                        <div class="d-flex gap-2 flex-wrap">
+                          <a href="#" class="btn btn-light rounded-pill px-4">Shop home</a>
+                          <a href="#" class="btn btn-outline-light rounded-pill px-4">Explore bundles</a>
+                        </div>
+                      </div>
+                    </article>
+                  </div>
+                </div>
+
+                <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev" aria-label="Previous slide">
+                  <span class="carousel-control-prev-icon"></span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next" aria-label="Next slide">
+                  <span class="carousel-control-next-icon"></span>
+                </button>
               </div>
+            </div>
 
-              <div class="carousel-inner h-100 rounded-4 shadow-sm">
-                <div class="carousel-item active h-100">
-                  <article class="hero-card h-100 d-flex align-items-center">
-                    <div>
-                      <span class="badge text-bg-warning mb-3">Limited-Time Savings</span>
-                      <h1 class="display-5 fw-bold">Everyday essentials, now at lower prices</h1>
-                      <p class="mb-4">Save across groceries, cleaning supplies, and wellness products with convenient pickup or delivery.</p>
-                      <div class="d-flex gap-2 flex-wrap">
-                        <a href="#" class="btn btn-light rounded-pill px-4">Shop essentials</a>
-                        <a href="#" class="btn btn-outline-light rounded-pill px-4">View weekly ad</a>
-                      </div>
-                    </div>
-                  </article>
-                </div>
-
-                <div class="carousel-item h-100">
-                  <article class="hero-card alt h-100 d-flex align-items-center">
-                    <div>
-                      <span class="badge text-bg-light mb-3">Tech Refresh</span>
-                      <h2 class="display-6 fw-bold">Top-rated laptops, TVs, and audio picks</h2>
-                      <p class="mb-4">Discover online-only markdowns and free 2-day shipping on select electronics.</p>
-                      <div class="d-flex gap-2 flex-wrap">
-                        <a href="#" class="btn btn-warning rounded-pill px-4">Browse electronics</a>
-                        <a href="#" class="btn btn-outline-light rounded-pill px-4">See best sellers</a>
-                      </div>
-                    </div>
-                  </article>
-                </div>
-
-                <div class="carousel-item h-100">
-                  <article class="hero-card third h-100 d-flex align-items-center">
-                    <div>
-                      <span class="badge text-bg-warning mb-3">Home Upgrade</span>
-                      <h2 class="display-6 fw-bold">Refresh every room with smart picks</h2>
-                      <p class="mb-4">Furniture, kitchen, storage, and decor bundles curated for modern homes.</p>
-                      <div class="d-flex gap-2 flex-wrap">
-                        <a href="#" class="btn btn-light rounded-pill px-4">Shop home</a>
-                        <a href="#" class="btn btn-outline-light rounded-pill px-4">Explore bundles</a>
-                      </div>
-                    </div>
-                  </article>
-                </div>
-              </div>
-
-              <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev" aria-label="Previous slide">
-                <span class="carousel-control-prev-icon"></span>
-              </button>
-              <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next" aria-label="Next slide">
-                <span class="carousel-control-next-icon"></span>
-              </button>
+            <div class="hero-submenu-area" id="heroSubmenuArea" aria-hidden="true">
+              <div class="hero-submenu-grid" id="heroSubmenuGrid"></div>
             </div>
           </div>
         </div>
@@ -939,7 +960,7 @@
         <li><a href="#">California privacy rights</a></li>
         <li><a href="#">Your privacy choices</a></li>
       </ul>
-      <p class="small mb-0">© 2026 Walmart-inspired demo homepage. Built with HTML, CSS, JS, jQuery, and Bootstrap.</p>
+      <p class="small mb-0">© 2026 SAFQQA-inspired demo homepage. Built with HTML, CSS, JS, jQuery, and Bootstrap.</p>
     </div>
   </footer>
 
@@ -1057,6 +1078,7 @@
               <label class="form-label">Payment method</label>
               <select class="form-select" name="payment" required>
                 <option value="">Select method</option>
+                <option>Visa</option>
                 <option>Credit Card</option>
                 <option>Debit Card</option>
                 <option>Cash on Delivery</option>

@@ -22,8 +22,15 @@ $(function () {
     { id: 13, name: "Cordless Hand Blender", category: "Home", brand: "Better Chef", price: 22, oldPrice: 29, rating: 4.1, image: "https://picsum.photos/seed/blender/600/420" },
     { id: 14, name: "Resistance Band Set", category: "Fitness", brand: "Equate", price: 18, oldPrice: 25, rating: 4.0, image: "https://picsum.photos/seed/bands/600/420" },
     { id: 15, name: "STEM Learning Kit", category: "Kids", brand: "SparkLab", price: 29, oldPrice: 39, rating: 4.8, image: "https://picsum.photos/seed/stem/600/420" },
-    { id: 16, name: "Bluetooth Portable Speaker", category: "Electronics", brand: "onn.", price: 39, oldPrice: 49, rating: 4.3, image: "https://picsum.photos/seed/speaker/600/420" }
+    { id: 16, name: "Bluetooth Portable Speaker", category: "Electronics", brand: "onn.", price: 39, oldPrice: 49, rating: 4.3, image: "https://picsum.photos/seed/speaker/600/420" },
+    { id: 17, name: "Ultra HD Monitor 34-inch", category: "Electronics", brand: "VisionPro", price: 1000, oldPrice: 1199, rating: 4.5, condition: "New", image: "https://picsum.photos/seed/monitor34/600/420" },
+    { id: 18, name: "Professional Espresso Machine", category: "Home", brand: "BrewMaster", price: 2000, oldPrice: 2399, rating: 4.6, condition: "Package opened", image: "https://picsum.photos/seed/espresso-pro/600/420" },
+    { id: 19, name: "Luxury Massage Chair", category: "Home", brand: "Relaxa", price: 10000, oldPrice: 11499, rating: 4.7, condition: "Used", image: "https://picsum.photos/seed/massage-chair/600/420" },
+    { id: 20, name: "Industrial CNC Machine", category: "Electronics", brand: "MechaCore", price: 20000, oldPrice: 22999, rating: 4.8, condition: "New", image: "https://picsum.photos/seed/cnc-machine/600/420" }
   ];
+  var maxCatalogPrice = products.reduce(function (max, p) {
+    return Math.max(max, Number(p.price) || 0);
+  }, 0);
   window.WM_PRODUCTS = products.slice();
 
   var state = {
@@ -31,7 +38,7 @@ $(function () {
     category: "all",
     brand: "all",
     sort: "featured",
-    maxPrice: 500,
+    maxPrice: maxCatalogPrice,
     page: 1,
     perPage: 8,
     coupon: ""
@@ -151,6 +158,20 @@ $(function () {
     return "$" + Number(value).toFixed(2);
   }
 
+  function syncPriceRangeBounds() {
+    if (!$priceRange.length) return;
+    var minPrice = Number($priceRange.attr("min")) || 0;
+    var step = maxCatalogPrice > 5000 ? 50 : (maxCatalogPrice > 1000 ? 10 : 5);
+    $priceRange.attr("max", maxCatalogPrice);
+    $priceRange.attr("step", step);
+
+    if (state.maxPrice < minPrice || state.maxPrice > maxCatalogPrice) {
+      state.maxPrice = maxCatalogPrice;
+    }
+    $priceRange.val(state.maxPrice);
+    $priceRangeValue.text(money(state.maxPrice));
+  }
+
   function toast(message) {
     var text = window.WM_I18N && typeof window.WM_I18N.t === "function" ? window.WM_I18N.t(message) : message;
     $("#toastText").text(text);
@@ -180,7 +201,7 @@ $(function () {
       "Cart items": "عناصر السلة",
       "Total": "الإجمالي",
       "Language": "اللغة",
-      "Search everything at Walmart online and in store": "ابحث عن كل شيء في وولمارت عبر الإنترنت وفي المتجر",
+      "Search everything at SAFQQA online and in store": "ابحث عن كل شيء في وولمارت عبر الإنترنت وفي المتجر",
       "Skip to content": "تخطي إلى المحتوى",
       "Limited-Time Savings": "تخفيضات لفترة محدودة",
       "Everyday essentials, now at lower prices": "الأساسيات اليومية الآن بأسعار أقل",
@@ -247,14 +268,15 @@ $(function () {
       "ZIP": "الرمز البريدي",
       "Payment method": "طريقة الدفع",
       "Select method": "اختر الطريقة",
+      "Visa": "فيزا",
       "Credit Card": "بطاقة ائتمان",
       "Debit Card": "بطاقة خصم",
       "Cash on Delivery": "الدفع عند الاستلام",
       "Place order": "تأكيد الطلب",
-      "Checkout - Walmart-Inspired Store": "الدفع - متجر مستوحى من وولمارت",
-      "Cart - Walmart-Inspired Store": "السلة - متجر مستوحى من وولمارت",
-      "Shop - Walmart-Inspired Store": "المتجر - متجر مستوحى من وولمارت",
-      "Product Details - Walmart-Inspired Store": "تفاصيل المنتج - متجر مستوحى من وولمارت",
+      "Checkout - SAFQQA-Inspired Store": "الدفع - متجر مستوحى من وولمارت",
+      "Cart - SAFQQA-Inspired Store": "السلة - متجر مستوحى من وولمارت",
+      "Shop - SAFQQA-Inspired Store": "المتجر - متجر مستوحى من وولمارت",
+      "Product Details - SAFQQA-Inspired Store": "تفاصيل المنتج - متجر مستوحى من وولمارت",
       "Product": "المنتج",
       "View larger": "عرض أكبر",
       "Share": "مشاركة",
@@ -263,22 +285,31 @@ $(function () {
       "Save 25%": "وفر 25%",
       "Pickup, delivery, and shipping available.": "الاستلام والتوصيل والشحن متاحة.",
       "Arrives by tomorrow": "يصل بحلول الغد",
-      "Free delivery with Walmart+": "توصيل مجاني مع Walmart+",
+      "Free delivery with SAFQQA+": "توصيل مجاني مع SAFQQA+",
+      "Free delivery included for this item.": "التوصيل مجاني لهذا المنتج.",
+      "Free delivery unlocked on this item.": "تم تفعيل التوصيل المجاني لهذا المنتج.",
       "Pickup today": "استلام اليوم",
       "Ready in 2 hours at Sacramento Supercenter": "جاهز خلال ساعتين في ساكرامنتو سوبرسنتر",
+      "Condition": "الحالة",
+      "Package opened": "تم فتح العبوة",
+      "Used": "مستعمل",
       "Size": "الحجم",
       "1 month": "شهر واحد",
       "2 month": "شهران",
       "3 month": "3 أشهر",
+      "Cash on Delivery is unavailable for this item.": "الدفع عند الاستلام غير متاح لهذا المنتج.",
+      "Cash on Delivery is unavailable for items priced above $10,000.": "الدفع عند الاستلام غير متاح للمنتجات التي يزيد سعرها عن 10,000 دولار.",
+      "For this item, payment is available by Visa only.": "لهذا المنتج، الدفع متاح ببطاقة فيزا فقط.",
+      "For products above $10,000, payment is available by Visa only.": "للمنتجات التي يزيد سعرها عن 10,000 دولار، الدفع متاح ببطاقة فيزا فقط.",
       "Free returns within 90 days": "إرجاع مجاني خلال 90 يومًا",
       "Authentic guarantee": "ضمان الأصالة",
       "Pay in 4 with Klarna": "ادفع على 4 دفعات مع كلارنا",
       "At a glance": "نظرة سريعة",
-      "Sponsored, sold & shipped by Walmart": "إعلان ممول، يباع ويشحن بواسطة وولمارت",
+      "Sponsored, sold & shipped by SAFQQA": "إعلان ممول، يباع ويشحن بواسطة وولمارت",
       "per kit": "لكل مجموعة",
       "Only 16 left in stock": "متبقي 16 فقط في المخزون",
       "Buy now": "اشتر الآن",
-      "Sold by Walmart.com": "يباع بواسطة Walmart.com",
+      "Sold by SAFQQA.com": "يباع بواسطة SAFQQA.com",
       "Free return shipping": "شحن إرجاع مجاني",
       "2-year protection plan available": "خطة حماية لمدة سنتين متاحة",
       "Highlights": "أهم المميزات",
@@ -311,10 +342,10 @@ $(function () {
       "Foaming Cleanser": "غسول رغوي",
       "Clay Detox Mask": "قناع طين لإزالة السموم",
       "Daily Moisturizer": "مرطب يومي",
-      "Contact - Walmart-Inspired Store": "اتصل بنا - متجر مستوحى من وولمارت",
-      "Orders - Walmart-Inspired Store": "الطلبات - متجر مستوحى من وولمارت",
-      "Account - Walmart-Inspired Store": "الحساب - متجر مستوحى من وولمارت",
-      "Create Account - Walmart-Inspired Store": "إنشاء حساب - متجر مستوحى من وولمارت",
+      "Contact - SAFQQA-Inspired Store": "اتصل بنا - متجر مستوحى من وولمارت",
+      "Orders - SAFQQA-Inspired Store": "الطلبات - متجر مستوحى من وولمارت",
+      "Account - SAFQQA-Inspired Store": "الحساب - متجر مستوحى من وولمارت",
+      "Create Account - SAFQQA-Inspired Store": "إنشاء حساب - متجر مستوحى من وولمارت",
       "Popular items in your area": "منتجات شائعة في منطقتك",
       "My wishlist": "قائمة رغباتي",
       "Order history": "سجل الطلبات",
@@ -323,7 +354,7 @@ $(function () {
       "Message": "الرسالة",
       "Phone: +1 (800) 555-1234": "الهاتف: +1 (800) 555-1234",
       "Live chat: 24/7": "دردشة مباشرة: 24/7",
-      "Email: support@walmart-demo.com": "البريد: support@walmart-demo.com",
+      "Email: support@SAFQQA-demo.com": "البريد: support@SAFQQA-demo.com",
       "Continue shopping": "متابعة التسوق",
       "Featured deals": "العروض المميزة",
       "Full ecommerce catalog": "كتالوج التجارة الإلكترونية الكامل",
@@ -359,9 +390,9 @@ $(function () {
       "Browse all": "تصفح الكل",
       "Popular brands": "العلامات التجارية الشائعة",
       "Shop brand stores": "تسوق متاجر العلامات التجارية",
-      "WALMART APP": "تطبيق وولمارت",
+      "SAFQQA APP": "تطبيق وولمارت",
       "Get order updates and faster checkout": "احصل على تحديثات الطلب وتسوق أسرع",
-      "Scan, pay, and reorder in seconds with the Walmart mobile app.": "امسح وادفع وأعد الطلب خلال ثوانٍ عبر تطبيق وولمارت.",
+      "Scan, pay, and reorder in seconds with the SAFQQA mobile app.": "امسح وادفع وأعد الطلب خلال ثوانٍ عبر تطبيق وولمارت.",
       "Learn more": "اعرف المزيد",
       "Download app": "تحميل التطبيق",
       "Be first to know about weekly deals": "كن أول من يعرف عروض الأسبوع",
@@ -418,12 +449,14 @@ $(function () {
       "Coupon removed": "تمت إزالة كود الخصم",
       "Your cart is empty": "سلتك فارغة",
       "Please complete all required fields.": "يرجى استكمال جميع الحقول المطلوبة.",
+      "Cash on Delivery is unavailable for items priced above $10,000. Please choose another payment method.": "الدفع عند الاستلام غير متاح للمنتجات التي يزيد سعرها عن 10,000 دولار. يرجى اختيار طريقة دفع أخرى.",
+      "For products above $10,000, payment is available by Visa only. Please select Visa to continue.": "للمنتجات التي يزيد سعرها عن 10,000 دولار، الدفع متاح ببطاقة فيزا فقط. يرجى اختيار فيزا للمتابعة.",
       "Order placed successfully. Thank you for shopping.": "تم تنفيذ الطلب بنجاح. شكرًا لتسوقك.",
       "Order placed": "تم تنفيذ الطلب",
       "Thanks. You are subscribed to weekly deals.": "شكرًا لك. تم الاشتراك في عروض الأسبوع.",
       "Enter a valid email address to subscribe.": "أدخل بريدًا إلكترونيًا صحيحًا للاشتراك.",
       "Done": "تم"
-      ,"Sold & shipped by Walmart": "يباع ويشحن من وولمارت"
+      ,"Sold & shipped by SAFQQA": "يباع ويشحن من وولمارت"
       ,"item": "قطعة"
       ,"items": "قطع"
       ,"1000+ bought since yesterday": "تم شراء أكثر من 1000 منذ الأمس"
@@ -489,7 +522,7 @@ $(function () {
 
       swapTextNodes(selected);
       setAttrByLang(".wm-translate-label", "text", "Language", "اللغة", selected);
-      setAttrByLang(".safqa-search input", "placeholder", "Search everything at Walmart online and in store", "ابحث عن كل شيء في وولمارت عبر الإنترنت وفي المتجر", selected);
+      setAttrByLang(".safqa-search input", "placeholder", "Search everything at SAFQQA online and in store", "ابحث عن كل شيء في وولمارت عبر الإنترنت وفي المتجر", selected);
       setAttrByLang("#catalogSearch", "placeholder", "Search in catalog", "ابحث في الكتالوج", selected);
       setAttrByLang("#newsletterEmail", "placeholder", "Enter your email", "أدخل بريدك الإلكتروني", selected);
       setAttrByLang("#couponInput", "placeholder", "Coupon code (SAVE10)", "كود الخصم (SAVE10)", selected);
@@ -535,6 +568,442 @@ $(function () {
     $revealItems.each(function () {
       if ($(this).offset().top < viewportBottom) {
         $(this).addClass("visible");
+      }
+    });
+  }
+
+  function initHeroMegaMenu() {
+    var mega = document.getElementById("heroMegaMenu");
+    var submenuArea = document.getElementById("heroSubmenuArea");
+    var submenuGrid = document.getElementById("heroSubmenuGrid");
+    if (!mega || !submenuArea || !submenuGrid) return;
+
+    var links = Array.from(mega.querySelectorAll(".hero-category-link[data-hero-category]"));
+    if (!links.length) return;
+
+    var menuData = {
+      fashion: {
+        columns: [
+          {
+            groups: [{
+              title: "WOMEN'S FASHION",
+              items: ["Pullovers & Cardigans", "Jackets & Coats", "Hoodies & Sweatshirts", "Pants & Jeans", "Tops & Blouses", "Dresses & Jumpsuits", "Home Wear & Lingerie", "Sports Wear", "Plus Size", "Maternity Wear", "Bags & Wallets", "Jewelry & Watches", "Accessories", "Scarves", "Shoes", "Boots"]
+            }]
+          },
+          {
+            groups: [{
+              title: "MEN'S FASHION",
+              items: ["Pullovers & Cardigans", "Jackets & Coats", "Hoodies & Sweatshirts", "Pants", "Shirts", "T-Shirts & Polos", "Homewear & Underwear", "Sports Wear", "Suits", "Plus Size", "Shoes", "Bags & Wallets", "Watches", "Socks", "Swimsuits & Shorts"]
+            }]
+          },
+          {
+            groups: [
+              {
+                title: "KID'S FASHION",
+                items: ["Boy's Fashion", "Girl's Fashion", "Baby Boy's Fashion", "Baby Girl's Fashion"]
+              },
+              {
+                title: "TOP BRANDS",
+                items: ["LC Waikiki", "Defacto", "Activ", "Adidas", "American Eagle"]
+              }
+            ]
+          }
+        ],
+        promo: {
+          label: "OFFICIAL STORE",
+          image: "https://picsum.photos/seed/fashion-official/160/160",
+          alt: "Official fashion store"
+        }
+      },
+      phones: {
+        columns: [
+          {
+            groups: [{
+              title: "SMARTPHONES",
+              items: ["Apple iPhone", "Samsung Galaxy", "Xiaomi", "OnePlus", "Nokia", "Refurbished phones"]
+            }]
+          },
+          {
+            groups: [{
+              title: "TABLETS & ACCESSORIES",
+              items: ["iPad", "Android tablets", "Keyboard covers", "Stylus pens", "Chargers", "Protective cases"]
+            }]
+          },
+          {
+            groups: [{
+              title: "WEARABLES & AUDIO",
+              items: ["Smart watches", "Fitness bands", "Wireless earbuds", "Headphones", "Portable speakers", "Power banks"]
+            }]
+          }
+        ],
+        promo: {
+          label: "NEW ARRIVALS",
+          image: "https://picsum.photos/seed/mobile-arrivals/160/160",
+          alt: "Mobile new arrivals"
+        }
+      },
+      health: {
+        columns: [
+          {
+            groups: [{
+              title: "BEAUTY CARE",
+              items: ["Skin care", "Makeup", "Hair care", "Fragrances", "Body lotions", "Sun protection"]
+            }]
+          },
+          {
+            groups: [{
+              title: "PERSONAL CARE",
+              items: ["Shaving", "Oral care", "Bath essentials", "Feminine care", "Deodorants", "Grooming kits"]
+            }]
+          },
+          {
+            groups: [{
+              title: "WELLNESS",
+              items: ["Vitamins", "Supplements", "Medical devices", "First aid", "Sleep support", "Protein & nutrition"]
+            }]
+          }
+        ],
+        promo: {
+          label: "DAILY CARE",
+          image: "https://picsum.photos/seed/beauty-care/160/160",
+          alt: "Beauty and wellness"
+        }
+      },
+      home: {
+        columns: [
+          {
+            groups: [{
+              title: "LIVING ROOM",
+              items: ["Sofas", "Coffee tables", "TV units", "Lighting", "Rugs", "Wall decor"]
+            }]
+          },
+          {
+            groups: [{
+              title: "BEDROOM",
+              items: ["Beds", "Mattresses", "Wardrobes", "Bed sheets", "Pillows", "Nightstands"]
+            }]
+          },
+          {
+            groups: [{
+              title: "KITCHEN & DINING",
+              items: ["Cookware", "Dinner sets", "Storage", "Small appliances", "Kitchen tools", "Cleaning supplies"]
+            }]
+          }
+        ],
+        promo: {
+          label: "HOME PICKS",
+          image: "https://picsum.photos/seed/home-picks/160/160",
+          alt: "Home and furniture picks"
+        }
+      },
+      appliances: {
+        columns: [
+          {
+            groups: [{
+              title: "LARGE APPLIANCES",
+              items: ["Refrigerators", "Washing machines", "Dishwashers", "Cookers", "Freezers", "Air conditioners"]
+            }]
+          },
+          {
+            groups: [{
+              title: "SMALL APPLIANCES",
+              items: ["Microwaves", "Air fryers", "Coffee makers", "Toasters", "Blenders", "Vacuum cleaners"]
+            }]
+          },
+          {
+            groups: [{
+              title: "PARTS & INSTALLATION",
+              items: ["Water filters", "Extension cables", "Appliance stands", "Spare parts", "Warranty plans", "Installation help"]
+            }]
+          }
+        ],
+        promo: {
+          label: "TOP SAVINGS",
+          image: "https://picsum.photos/seed/appliance-sale/160/160",
+          alt: "Appliances offers"
+        }
+      },
+      "tv-audio": {
+        columns: [
+          {
+            groups: [{
+              title: "TELEVISIONS",
+              items: ["4K UHD TVs", "QLED TVs", "OLED TVs", "Smart TVs", "Gaming TVs", "TV wall mounts"]
+            }]
+          },
+          {
+            groups: [{
+              title: "AUDIO",
+              items: ["Sound bars", "Home theater", "Bluetooth speakers", "Stereo systems", "Headphones", "Microphones"]
+            }]
+          },
+          {
+            groups: [{
+              title: "STREAMING & GAMING",
+              items: ["Streaming boxes", "Media players", "Projectors", "Gaming monitors", "Cables", "Remote controls"]
+            }]
+          }
+        ],
+        promo: {
+          label: "CINEMA DEALS",
+          image: "https://picsum.photos/seed/tv-audio/160/160",
+          alt: "Television and audio deals"
+        }
+      },
+      baby: {
+        columns: [
+          {
+            groups: [{
+              title: "BABY FEEDING",
+              items: ["Bottles", "Sterilizers", "Breast pumps", "Formula", "High chairs", "Sippy cups"]
+            }]
+          },
+          {
+            groups: [{
+              title: "DIAPERING",
+              items: ["Diapers", "Wipes", "Rash creams", "Changing tables", "Pail systems", "Training pants"]
+            }]
+          },
+          {
+            groups: [{
+              title: "BABY GEAR",
+              items: ["Strollers", "Car seats", "Carriers", "Cribs", "Play pens", "Baby monitors"]
+            }]
+          }
+        ],
+        promo: {
+          label: "BABY ESSENTIALS",
+          image: "https://picsum.photos/seed/baby-store/160/160",
+          alt: "Baby essentials"
+        }
+      },
+      supermarket: {
+        columns: [
+          {
+            groups: [{
+              title: "FOOD CUPBOARD",
+              items: ["Rice & pasta", "Canned food", "Sauces", "Breakfast", "Snacks", "Baking supplies"]
+            }]
+          },
+          {
+            groups: [{
+              title: "FRESH & FROZEN",
+              items: ["Fruits & vegetables", "Meat & poultry", "Seafood", "Dairy", "Frozen meals", "Ice cream"]
+            }]
+          },
+          {
+            groups: [{
+              title: "HOUSEHOLD",
+              items: ["Laundry", "Paper products", "Cleaning", "Pet care", "Water & beverages", "Bulk packs"]
+            }]
+          }
+        ],
+        promo: {
+          label: "WEEKLY GROCERY",
+          image: "https://picsum.photos/seed/supermarket/160/160",
+          alt: "Supermarket offers"
+        }
+      },
+      computing: {
+        columns: [
+          {
+            groups: [{
+              title: "LAPTOPS & DESKTOPS",
+              items: ["Everyday laptops", "Gaming laptops", "2-in-1 devices", "Desktop towers", "All-in-one PCs", "Mini PCs"]
+            }]
+          },
+          {
+            groups: [{
+              title: "COMPONENTS",
+              items: ["Graphics cards", "Processors", "Memory", "Storage drives", "Motherboards", "Power supplies"]
+            }]
+          },
+          {
+            groups: [{
+              title: "PERIPHERALS",
+              items: ["Monitors", "Keyboards", "Mice", "Webcams", "Printers", "Networking gear"]
+            }]
+          }
+        ],
+        promo: {
+          label: "PRO PERFORMANCE",
+          image: "https://picsum.photos/seed/computing/160/160",
+          alt: "Computing products"
+        }
+      },
+      sports: {
+        columns: [
+          {
+            groups: [{
+              title: "FITNESS",
+              items: ["Treadmills", "Dumbbells", "Yoga mats", "Resistance bands", "Exercise bikes", "Recovery tools"]
+            }]
+          },
+          {
+            groups: [{
+              title: "OUTDOOR",
+              items: ["Camping tents", "Backpacks", "Cycling", "Hiking gear", "Water bottles", "Portable grills"]
+            }]
+          },
+          {
+            groups: [{
+              title: "TEAM SPORTS",
+              items: ["Football", "Basketball", "Tennis", "Swimming", "Cricket", "Protective gear"]
+            }]
+          }
+        ],
+        promo: {
+          label: "ACTIVE LIVING",
+          image: "https://picsum.photos/seed/sports-active/160/160",
+          alt: "Sports categories"
+        }
+      },
+      gaming: {
+        columns: [
+          {
+            groups: [{
+              title: "CONSOLES",
+              items: ["PlayStation", "Xbox", "Nintendo", "Handheld consoles", "VR headsets", "Bundle offers"]
+            }]
+          },
+          {
+            groups: [{
+              title: "GAMES",
+              items: ["New releases", "Sports games", "Adventure games", "Family games", "Digital cards", "Pre-orders"]
+            }]
+          },
+          {
+            groups: [{
+              title: "ACCESSORIES",
+              items: ["Controllers", "Headsets", "Gaming chairs", "Capture cards", "Cooling stands", "Gaming storage"]
+            }]
+          }
+        ],
+        promo: {
+          label: "LEVEL UP",
+          image: "https://picsum.photos/seed/gaming-levelup/160/160",
+          alt: "Gaming products"
+        }
+      },
+      other: {
+        columns: [
+          {
+            groups: [{
+              title: "AUTOMOTIVE",
+              items: ["Car electronics", "Tires", "Cleaning kits", "Motor oils", "Emergency tools", "Seat covers"]
+            }]
+          },
+          {
+            groups: [{
+              title: "OFFICE & SCHOOL",
+              items: ["Stationery", "Office chairs", "Whiteboards", "Paper", "Backpacks", "Calculators"]
+            }]
+          },
+          {
+            groups: [{
+              title: "SERVICES",
+              items: ["Gift cards", "Installation", "Extended warranty", "Assembly", "Pickup & delivery", "Business bulk"]
+            }]
+          }
+        ],
+        promo: {
+          label: "DISCOVER MORE",
+          image: "https://picsum.photos/seed/discover-more/160/160",
+          alt: "More categories"
+        }
+      }
+    };
+
+    var closeTimer;
+
+    function isDesktop() {
+      return window.matchMedia("(min-width: 992px)").matches;
+    }
+
+    function renderGroup(group, categoryKey) {
+      var items = (group.items || []).map(function (item) {
+        var href = "shop.html?category=" + encodeURIComponent(categoryKey) + "&sub=" + encodeURIComponent(item.toLowerCase());
+        return '<li><a href="' + href + '">' + escapeHtml(item) + "</a></li>";
+      }).join("");
+
+      return [
+        '<section class="hero-submenu-group">',
+        '  <h4 class="hero-submenu-title">' + escapeHtml(group.title || "") + "</h4>",
+        '  <ul class="hero-submenu-list">' + items + "</ul>",
+        "</section>"
+      ].join("");
+    }
+
+    function renderSubmenu(categoryKey) {
+      var cfg = menuData[categoryKey] || menuData.other;
+      var columns = (cfg.columns || []).map(function (column) {
+        var groups = (column.groups || []).map(function (group) {
+          return renderGroup(group, categoryKey);
+        }).join("");
+        return '<div class="hero-submenu-column">' + groups + "</div>";
+      }).join("");
+      submenuGrid.innerHTML = columns;
+    }
+
+    function openCategory(categoryKey) {
+      if (!categoryKey) return;
+      window.clearTimeout(closeTimer);
+      renderSubmenu(categoryKey);
+      mega.classList.add("is-expanded");
+      submenuArea.setAttribute("aria-hidden", "false");
+
+      links.forEach(function (link) {
+        var key = link.getAttribute("data-hero-category");
+        link.classList.toggle("is-active", key === categoryKey);
+      });
+    }
+
+    function closeMenu() {
+      mega.classList.remove("is-expanded");
+      submenuArea.setAttribute("aria-hidden", "true");
+      submenuGrid.innerHTML = "";
+      links.forEach(function (link) {
+        link.classList.remove("is-active");
+      });
+    }
+
+    function scheduleClose() {
+      window.clearTimeout(closeTimer);
+      closeTimer = window.setTimeout(closeMenu, 90);
+    }
+
+    links.forEach(function (link) {
+      link.addEventListener("mouseenter", function () {
+        if (!isDesktop()) return;
+        openCategory(link.getAttribute("data-hero-category"));
+      });
+
+      link.addEventListener("focus", function () {
+        if (!isDesktop()) return;
+        openCategory(link.getAttribute("data-hero-category"));
+      });
+    });
+
+    mega.addEventListener("mouseenter", function () {
+      window.clearTimeout(closeTimer);
+    });
+
+    mega.addEventListener("mouseleave", function () {
+      if (!isDesktop()) return;
+      scheduleClose();
+    });
+
+    mega.addEventListener("focusout", function () {
+      window.setTimeout(function () {
+        if (!mega.contains(document.activeElement)) {
+          closeMenu();
+        }
+      }, 0);
+    });
+
+    window.addEventListener("resize", function () {
+      if (!isDesktop()) {
+        closeMenu();
       }
     });
   }
@@ -674,6 +1143,51 @@ $(function () {
     return { subtotal: subtotal, discount: discount, total: total };
   }
 
+  function isVisaMethodLabel(text) {
+    var normalized = String(text || "").trim().toLowerCase();
+    return normalized.indexOf("visa") !== -1 ||
+      normalized.indexOf("فيزا") !== -1;
+  }
+
+  function hasVisaOnlyItemsInCart() {
+    return Object.keys(cart).some(function (id) {
+      var product = getProductById(Number(id));
+      return !!(product && Number(product.price) > 10000);
+    });
+  }
+
+  function syncCheckoutPaymentRestrictions() {
+    var $payment = $('#checkoutForm select[name="payment"]');
+    if (!$payment.length) return;
+
+    var restricted = hasVisaOnlyItemsInCart();
+    var $options = $payment.find("option");
+    var $visaOption = $options.filter(function () {
+      return isVisaMethodLabel($(this).text()) || isVisaMethodLabel($(this).val());
+    }).first();
+
+    $options.each(function () {
+      var $option = $(this);
+      var isPlaceholder = !$option.val();
+      if (!restricted || isPlaceholder) {
+        $option.prop("disabled", false);
+        return;
+      }
+
+      var isVisa = isVisaMethodLabel($option.text()) || isVisaMethodLabel($option.val());
+      $option.prop("disabled", !isVisa);
+    });
+
+    if (restricted) {
+      var selectedValue = String($payment.val() || "");
+      var selectedText = $payment.find("option:selected").text();
+      var selectedIsVisa = isVisaMethodLabel(selectedValue) || isVisaMethodLabel(selectedText);
+      if (!selectedIsVisa) {
+        $payment.val($visaOption.length ? ($visaOption.val() || $visaOption.text()) : "");
+      }
+    }
+  }
+
   function escapeHtml(text) {
     return String(text)
       .replace(/&/g, "&amp;")
@@ -730,6 +1244,63 @@ $(function () {
     }).join("");
 
     $categorySections.html(html);
+  }
+
+  function getProductIdFromCard($card) {
+    var id = Number($card.attr("data-product-id"));
+    if (id) return id;
+
+    var fromAddCart = Number($card.find(".add-cart[data-product-id]").first().data("product-id"));
+    if (fromAddCart) return fromAddCart;
+
+    var fromWishlist = Number($card.find(".toggle-wishlist[data-product-id]").first().data("product-id"));
+    if (fromWishlist) return fromWishlist;
+
+    var href = $card.find(".product-link").first().attr("href") || "";
+    var match = href.match(/[?&]id=(\d+)/);
+    if (match) return Number(match[1]);
+    return 0;
+  }
+
+  function syncHomeProductWishlistButtons() {
+    if (!$("#heroMegaMenu").length) return;
+
+    $(".product-card").each(function () {
+      var $card = $(this);
+      var id = getProductIdFromCard($card);
+      if (!id) return;
+
+      var wished = wishlist.indexOf(id) !== -1;
+      var $toggle = $card.find(".toggle-wishlist").first();
+
+      if ($toggle.length) {
+        $toggle.attr("data-product-id", id).toggleClass("active", wished);
+        return;
+      }
+
+      $card.attr("data-product-id", id).addClass("wishlist-ready");
+      $card.append(
+        '<button class="icon-btn toggle-wishlist wishlist-float-btn ' + (wished ? "active" : "") + '" data-product-id="' + id + '" aria-label="Toggle wishlist"><i class="bi bi-heart-fill"></i></button>'
+      );
+    });
+
+    $(".category-mini-card").each(function () {
+      var $card = $(this);
+      var id = Number($card.data("product-id"));
+      if (!id) return;
+
+      var wished = wishlist.indexOf(id) !== -1;
+      var $toggle = $card.find(".toggle-wishlist").first();
+
+      if ($toggle.length) {
+        $toggle.toggleClass("active", wished).attr("data-product-id", id);
+        return;
+      }
+
+      $card.prepend(
+        '<div class="category-mini-actions"><button class="icon-btn icon-btn-mini toggle-wishlist ' + (wished ? "active" : "") + '" data-product-id="' + id + '" aria-label="Toggle wishlist"><i class="bi bi-heart-fill"></i></button></div>'
+      );
+    });
   }
 
   function renderCatalog() {
@@ -1023,6 +1594,8 @@ $(function () {
     renderCart();
     renderCartHoverDialog();
     renderCompare();
+    syncHomeProductWishlistButtons();
+    syncCheckoutPaymentRestrictions();
     syncCounts();
     saveState();
     if (window.WM_I18N && typeof window.WM_I18N.translatePage === "function") {
@@ -1031,15 +1604,17 @@ $(function () {
   }
 
   populateFilterOptions();
+  syncPriceRangeBounds();
   renderCategorySections();
   renderCategoryCardProducts();
   initReelsPlayer();
   initSiteTranslator();
+  initHeroMegaMenu();
   initCategorySlider();
   initAkwaSafqqaSlider();
   refreshAll();
   $("#couponInput").val(state.coupon);
-  $priceRangeValue.text(money($priceRange.val()));
+  syncPriceRangeBounds();
 
   syncHeaderState();
   revealOnScroll();
@@ -1174,15 +1749,15 @@ $(function () {
     state.category = "all";
     state.brand = "all";
     state.sort = "featured";
-    state.maxPrice = 500;
+    state.maxPrice = maxCatalogPrice;
     state.page = 1;
 
     $catalogSearch.val("");
     $catalogCategory.val("all");
     $catalogBrand.val("all");
     $catalogSort.val("featured");
-    $priceRange.val(500);
-    $priceRangeValue.text(money(500));
+    $priceRange.val(maxCatalogPrice);
+    $priceRangeValue.text(money(maxCatalogPrice));
 
     renderCatalog();
   });
@@ -1311,6 +1886,7 @@ $(function () {
   });
 
   $("#openCheckout").on("click", function (event) {
+    syncCheckoutPaymentRestrictions();
     if (getCartCount() === 0) {
       event.preventDefault();
       toast("Your cart is empty");
@@ -1319,14 +1895,26 @@ $(function () {
 
   $("#checkoutForm").on("submit", function (event) {
     event.preventDefault();
+    syncCheckoutPaymentRestrictions();
+    var $checkoutMessage = $("#checkoutMessage");
+    $checkoutMessage.removeClass("text-success text-danger");
+
     if (getCartCount() === 0) {
-      $("#checkoutMessage").text("Your cart is empty.").addClass("text-danger");
+      $checkoutMessage.text("Your cart is empty.").addClass("text-danger");
+      return;
+    }
+
+    var $payment = $(this).find('select[name="payment"]');
+    var selectedPayment = String($payment.val() || "");
+    var selectedText = $payment.find("option:selected").text();
+    if (hasVisaOnlyItemsInCart() && !(isVisaMethodLabel(selectedPayment) || isVisaMethodLabel(selectedText))) {
+      $checkoutMessage.text("For products above $10,000, payment is available by Visa only. Please select Visa to continue.").addClass("text-danger");
       return;
     }
 
     var valid = this.checkValidity();
     if (!valid) {
-      $("#checkoutMessage").text("Please complete all required fields.").addClass("text-danger");
+      $checkoutMessage.text("Please complete all required fields.").addClass("text-danger");
       return;
     }
 
@@ -1334,7 +1922,7 @@ $(function () {
     state.coupon = "";
     $("#couponInput").val("");
     refreshAll();
-    $("#checkoutMessage").text("Order placed successfully. Thank you for shopping.").removeClass("text-danger").addClass("text-success");
+    $checkoutMessage.text("Order placed successfully. Thank you for shopping.").removeClass("text-danger").addClass("text-success");
     toast("Order placed");
 
     if (checkoutModal) {
