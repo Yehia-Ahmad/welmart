@@ -176,7 +176,7 @@ h6 {
 
 .safqa-search-icon {
   border: 0;
-  background: #3b2bff;
+  background: linear-gradient(180deg, #43208c 0%, #3a1a7a 100%);
   color: #fff;
   width: 36px;
   height: 36px;
