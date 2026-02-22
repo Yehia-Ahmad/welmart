@@ -1091,6 +1091,29 @@ $(function () {
     });
   }
 
+  function initLastPieceSlider() {
+    var slider = document.getElementById("lastPieceSlider");
+    var prev = document.getElementById("lastPiecePrev");
+    var next = document.getElementById("lastPieceNext");
+    if (!slider || !prev || !next) return;
+
+    function getStep() {
+      var firstCard = slider.querySelector(".last-piece-slide-item");
+      if (!firstCard) return 280;
+      var styles = window.getComputedStyle(slider);
+      var gap = parseFloat(styles.columnGap || styles.gap || 0);
+      return firstCard.getBoundingClientRect().width + gap;
+    }
+
+    prev.addEventListener("click", function () {
+      slider.scrollBy({ left: -getStep(), behavior: "smooth" });
+    });
+
+    next.addEventListener("click", function () {
+      slider.scrollBy({ left: getStep(), behavior: "smooth" });
+    });
+  }
+
   function populateFilterOptions() {
     var categories = ["all"].concat(Array.from(new Set(products.map(function (p) { return p.category; }))));
     var brands = ["all"].concat(Array.from(new Set(products.map(function (p) { return p.brand; }))));
@@ -1612,6 +1635,7 @@ $(function () {
   initHeroMegaMenu();
   initCategorySlider();
   initAkwaSafqqaSlider();
+  initLastPieceSlider();
   refreshAll();
   $("#couponInput").val(state.coupon);
   syncPriceRangeBounds();
